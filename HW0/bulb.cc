@@ -6,5 +6,6 @@ using namespace std;
 
 	int main(){
 		
-		cout << "To get to the other side" << endl;
+		cout << "42." << endl;
+		return 0;
 	}
