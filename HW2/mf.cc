@@ -1,6 +1,6 @@
 //Habeeb Mohammed
-//2017-01-27
-//CS253 HW1 -- Character Properties
+//2017-01-30
+//CS253 HW2 -- Reading Multiple Files
 
 #include <iostream>
 #include <vector>
@@ -10,7 +10,7 @@
 
 using namespace std;
 
-int main(){
+int main(int argc, char *argv[]){
 	
 	//Read in ASCII-properties file
 	
@@ -77,44 +77,75 @@ int main(){
 
 			//For each char in std in, compare to elements in map corresponding to those char keys, then increment counter
 			
-			char c;	
-			int cCount = 0; int lCount = 0; int nCount = 0; int pCount = 0; int sCount = 0; int zCount = 0;
+		char c;	
+		int cCount = 0; int lCount = 0; int nCount = 0; int pCount = 0; int sCount = 0; int zCount = 0;
+			
+		if(argc > 1){
 
-			while( cin >> noskipws >> c ){
-				
-					if( propmap.at(c) == 'C' ){
+			for( int i = 1; i < argc; i++){
+	
+			ifstream in (argv[i]);
+			//bool isok = false;
+	
+				if(in.is_open()){
 
-						cCount++;
-					}
+					while( in >> noskipws >> c ){
+					
+						if( propmap.count(c) > 0 ){
+	
+							if( propmap.at(c) == 'C' ){
+					
+								cCount++;
+						
+							}
 
-					if( propmap.at(c) == 'L' ){
-
-						lCount++;
-					}
-
-					if( propmap.at(c) == 'N' ){
-
-						nCount++;
-					}
+							if( propmap.at(c) == 'L' ){
+	
+								lCount++;
+					
+							}
 		
-					if( propmap.at(c) == 'P' ){
+							if( propmap.at(c) == 'N' ){
 
-						pCount++;
+								nCount++;
+						
+							}
+		
+							if( propmap.at(c) == 'P' ){
+
+								pCount++;
+						
+	
+							}	
+
+							if( propmap.at(c) == 'S' ){
+
+								sCount++;
+						
+							}
+
+							if( propmap.at(c) == 'Z' ){
+
+								zCount++;
+						
+							}	
+						
+					    	}
+						else {	
+		
+							cerr 	<< "Error! File cannot be read." << '\n'
+								<< "Program: " << argv[0] << '\n'
+								<< "Unreadable file: " << argv[i] << '\n';	
+							return 0;
+
+						//stopping: check for c. so if c does not exist in the map, throw ^	
+						}	
+							
 
 					}
-
-					if( propmap.at(c) == 'S' ){
-
-						sCount++;
-					}
-
-					if( propmap.at(c) == 'Z' ){
-
-						zCount++;
-					}
-
+				}
 			}
-
+		
 		
 		//Output		
 
@@ -130,11 +161,16 @@ int main(){
 
 		cout << "Space: " << zCount << '\n';
 
+		}
+		
+		else
+		
+		cerr << "Usage: " << argv[0] << " <file1> | <file2> | ... " << '\n';
 	}
 	
 	//File not found exception
 	
-	else cout << "ERROR! THE ASCII TABLE HAS VANISHED! WHAT HAVE YOU DONE!?" << '\n';
+	else cout << "Error! ASCII-properties file not found." << '\n';
 		
 	return 0;
 }
