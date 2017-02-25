@@ -17,7 +17,9 @@ int main(int argc, char *argv[]){
 	vector<string> options;
 	vector<string> arguments;
 	string filename = "";
-	bool isAll;
+	bool isAll = false;
+if(argc != 1){
+
 	if(argv[1][0] == '-'){
 	
 		for(int i = 1; i < argc; i++){
@@ -33,48 +35,59 @@ int main(int argc, char *argv[]){
 						option = "all";
 						options.clear();
 						options.push_back(option);
-						isAll = true; 
+						isAll = true;
+						continue; 
 					
 					}
 				}
-			}
+			
+			
 				//if argv has a filename and the filename string is empty, store it, else complain and die
-				if(argv[i][0] != '-' && filename.empty()){
-					if(argc != 0){		
+				if(argv[i][0] != '-'){
+					if((argv[i][0] != '-') && (filename == "")){
 						filename = argv[i];
 					}
 					else{
-						cerr << "No filename provided!" << '\n';
-						exit(EXIT_FAILURE);
+					arguments.push_back(argv[i]);
+					//cerr << "No filename provided!" << '\n';
+					//exit(EXIT_FAILURE);
 					}
-				}
-				else{
-					if(argc != 0){
-						arguments.push_back(argv[i]);
-					}
-					else{
-						cerr << "No arguments provided!" << '\n';
-						exit(EXIT_FAILURE);
-					}
+				}	
 
+			}
+			else{
+				if((argv[i][0] != '-') && (filename == "")){
+					filename = argv[i];
 				}
+				else 
+					arguments.push_back(argv[i]);
+				
+
+		}	
 		
-		}
-		cout << options.at(0) << '\n';
-		cout << filename << '\n';
-		cout << arguments.size() << '\n';
-	}
-	else{
+	
 
+		}
+	
+	}
+
+	else{
+	
 		cerr << "No options provided!" << '\n';
 		exit(EXIT_FAILURE);
 
+
+		
 	}
+		
 
+		cout << options.size() << '\n';
+		cout << filename << '\n';
+		cout << arguments.at(0) << '\n';
 
 	
 	
-	ifstream input ("/s/bach/a/class/cs253/pub/ASCII-properties");
+	ifstream input (filename);
 
 	//If access to ASCII-properties file is possible
 	
@@ -114,11 +127,13 @@ int main(int argc, char *argv[]){
 
 		//Stores ascii chars corresponding to decimal values (i.e. 37 --> %) into a char vector
 
-		vector<char> asciiArray;
+		vector<string> asciiArray;
 
 		for( size_t i = 0; i < hexArray.size(); i++){
-			
-			asciiArray.push_back( (char) hexArray[i] );
+			char tempc = (char) hexArray[i];
+			string temps;
+			temps.push_back(tempc);
+			asciiArray.push_back( temps );
 		}
 
 		
@@ -126,71 +141,52 @@ int main(int argc, char *argv[]){
 		
 		//Make and populate a map with ascii and property symbol(s) (i.e. Cc to C for now, perhaps tuple in the future?)
 
-		map<char, char> propmap;		
+		map<string, string> propmap;		
 
 		for( size_t i = 0; i < symArray.size(); i++ ){
 
-			char firstChar = symArray[i][0];
-			propmap.insert( pair<char,char>(asciiArray[i], firstChar) );
+			string symbol = symArray[i];
+			propmap.insert( pair<string,string>(asciiArray[i], symbol) );
 		}
 
 
 			//For each char in std in, compare to elements in map corresponding to those char keys, then increment counter
 			
-		char c;	
-		int cCount = 0; int lCount = 0; int nCount = 0; int pCount = 0; int sCount = 0; int zCount = 0;
-			
+		
+		string index;
+		int cCount = 0;
+	
 		if(argc > 1){
 
-			for( int i = 1; i < argc; i++){
+			for( size_t i = 0; i < arguments.size(); i++){
 	
-			ifstream in (argv[i]);
+			ifstream in (arguments[i]);
 			//bool isok = false;
-	
+
 				if(in.is_open()){
 
-					while( in >> noskipws >> c ){
-					
-						if( propmap.count(c) > 0 ){
+					while( getline(in, index) ){
+						for(size_t j = 0; j < index.size(); j++){
+						string jdex;
+						jdex.push_back(index[j]);
+						//cout << jdex << '\n';
+						if( propmap.count(jdex) > 0 ){
+							
+							for(size_t k = 0; k < options.size(); k++){
 	
-							if( propmap.at(c) == 'C' ){
+								if( options.at(k) == propmap.at(jdex) ){
 					
-								cCount++;
+									cCount++;
 						
+								}
+								
 							}
-
-							if( propmap.at(c) == 'L' ){
-	
-								lCount++;
-					
-							}
-		
-							if( propmap.at(c) == 'N' ){
-
-								nCount++;
-						
-							}
-		
-							if( propmap.at(c) == 'P' ){
-
-								pCount++;
-						
-	
-							}	
-
-							if( propmap.at(c) == 'S' ){
-
-								sCount++;
-						
-							}
-
-							if( propmap.at(c) == 'Z' ){
-
-								zCount++;
-						
-							}	
-						
+						}
+				
 					    	}
+						
+						}
+				}	
 						else {	
 		
 							cerr 	<< "Error! File cannot be read." << '\n'
@@ -203,28 +199,17 @@ int main(int argc, char *argv[]){
 							
 
 					}
+	
+				cout << "Count: " << cCount << endl;
 				}
-			}
-		
+			
+				
 		
 		//Output		
 
-		cout << "Control: " << cCount << '\n';
-
-		cout << "Letter: " << lCount << '\n';
-
-		cout << "Number: " << nCount << '\n';
-
-		cout << "Punctuation: " << pCount << '\n';
-
-		cout << "Symbol: " << sCount << '\n';
-
-		cout << "Space: " << zCount << '\n';
-
 		}
-		
-		else
-		
+	
+		else		
 		cerr << "Usage: " << argv[0] << " <file1> | <file2> | ... " << '\n';
 	}
 	
@@ -232,6 +217,10 @@ int main(int argc, char *argv[]){
 	//File not found exception
 	
 	else cout << "Error! ASCII-properties file not found." << '\n';
-		
-	return 0;
 }
+//	else{
+//		cout << "no args" << '\n';
+//	}
+		
+//	return 0;
+//}
