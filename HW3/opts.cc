@@ -11,8 +11,28 @@
 using namespace std;
 
 int main(int argc, char *argv[]){
+
+
+	//Read all the options into 	
+	string filename;
+
+	if(argv[1][0] == '-'){
 	
-	//Read in ASCII-properties file
+		for(int i = 1; i < argc; i++){
+					
+				if(argv[i][0] == '-')
+					continue;
+				else{
+					//filename = argv[i][0];
+					//cout << filename << '\n';
+				}
+		}
+	}
+	else{
+
+		cerr << "No options provided!" << '\n';
+
+	}
 	
 	ifstream input ("/s/bach/a/class/cs253/pub/ASCII-properties");
 
