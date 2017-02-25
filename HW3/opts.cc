@@ -15,26 +15,64 @@ int main(int argc, char *argv[]){
 
 	//Read all the options into a vector of strings	
 	vector<string> options;
-
+	vector<string> arguments;
+	string filename = "";
+	bool isAll;
 	if(argv[1][0] == '-'){
 	
 		for(int i = 1; i < argc; i++){
 			string option = "";
-			
-				if(argv[i][0] == '-')
+			if(!isAll){
+				//if argv has options, store them
+				if(argv[i][0] == '-'){
 					option.push_back(argv[i][1]);
 					option.push_back(argv[i][2]);
 					options.push_back(option);
-				else{
-			
+					
+					if(argv[i][1] == 'a' && argv[i][2] == 'l' && argv[i][3] == 'l'){
+						option = "all";
+						options.clear();
+						options.push_back(option);
+						isAll = true; 
+					
+					}
 				}
+			}
+				//if argv has a filename and the filename string is empty, store it, else complain and die
+				if(argv[i][0] != '-' && filename.empty()){
+					if(argc != 0){		
+						filename = argv[i];
+					}
+					else{
+						cerr << "No filename provided!" << '\n';
+						exit(EXIT_FAILURE);
+					}
+				}
+				else{
+					if(argc != 0){
+						arguments.push_back(argv[i]);
+					}
+					else{
+						cerr << "No arguments provided!" << '\n';
+						exit(EXIT_FAILURE);
+					}
+
+				}
+		
 		}
+		cout << options.at(0) << '\n';
+		cout << filename << '\n';
+		cout << arguments.size() << '\n';
 	}
 	else{
 
 		cerr << "No options provided!" << '\n';
+		exit(EXIT_FAILURE);
 
 	}
+
+
+	
 	
 	ifstream input ("/s/bach/a/class/cs253/pub/ASCII-properties");
 
@@ -190,6 +228,7 @@ int main(int argc, char *argv[]){
 		cerr << "Usage: " << argv[0] << " <file1> | <file2> | ... " << '\n';
 	}
 	
+
 	//File not found exception
 	
 	else cout << "Error! ASCII-properties file not found." << '\n';
