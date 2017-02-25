@@ -13,18 +13,20 @@ using namespace std;
 int main(int argc, char *argv[]){
 
 
-	//Read all the options into 	
-	string filename;
+	//Read all the options into a vector of strings	
+	vector<string> options;
 
 	if(argv[1][0] == '-'){
 	
 		for(int i = 1; i < argc; i++){
-					
+			string option = "";
+			
 				if(argv[i][0] == '-')
-					continue;
+					option.push_back(argv[i][1]);
+					option.push_back(argv[i][2]);
+					options.push_back(option);
 				else{
-					//filename = argv[i][0];
-					//cout << filename << '\n';
+			
 				}
 		}
 	}
