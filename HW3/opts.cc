@@ -171,11 +171,10 @@ int main(int argc, char *argv[]){
 
 			if(argc > 1){
 				if(options[0] == "all"){
-					for(auto arg : arguments){
-						options.push_back(arg);
+					for(auto sym : symArray){
+						options.push_back(sym);
 					
 					}
-					
 				}
 
 				for( size_t i = 0; i < arguments.size(); i++){
