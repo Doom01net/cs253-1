@@ -7,6 +7,7 @@
 #include <map>
 #include <fstream>
 #include <string>
+#include <set>
 
 using namespace std;
 
@@ -171,9 +172,14 @@ int main(int argc, char *argv[]){
 
 			if(argc > 1){
 				if(options[0] == "all"){
+					options.clear();
+					set<string> temp_set;
 					for(auto sym : symArray){
-						options.push_back(sym);
+						temp_set.insert(sym);
 					
+					}
+					for(auto elem : temp_set){
+						options.push_back(elem);
 					}
 				}
 
@@ -195,7 +201,7 @@ int main(int argc, char *argv[]){
 
 										if( options.at(k) == propmap.at(jdex) ){
 
-											outmap.at(options.at(k)) = outmap.at(options.at(k)) + 1;
+											outmap.at(options.at(k))++;
 
 										}
 
@@ -218,11 +224,26 @@ int main(int argc, char *argv[]){
 
 
 				}
+				
+				map<string,int>::const_iterator iter = outmap.cbegin();
+				
 				for(auto option : options){
-					if(option == "all"){options.erase(options.begin()); isAll = true; continue;}
+					if(option == "all"){outmap.erase(outmap.begin()); isAll = true; continue;}
 
 					if(outmap.count(option) > 0 || isAll){
-							cout << option << ": " << outmap.at(option) << '\n';
+							if(isAll){
+							
+								if(iter != outmap.cend()){
+								cout << iter->first << ": " << iter->second << '\n';
+								++iter;
+								}
+	
+							}
+							else{
+								cout << option << ": " << outmap.at(option) << '\n';
+
+							}
+
 							
 					}
 					else{
