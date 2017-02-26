@@ -163,6 +163,7 @@ int main(int argc, char *argv[]){
 
 
 			string index;
+			int cCount = 0;
 			map<string, int> outmap;
 
 			for(auto sym : symArray){
@@ -170,16 +171,9 @@ int main(int argc, char *argv[]){
 			}
 
 			if(argc > 1){
-				if(options[0] == "all"){
-					for(auto arg : arguments){
-						options.push_back(arg);
-					
-					}
-					
-				}
 
 				for( size_t i = 0; i < arguments.size(); i++){
-					
+
 					ifstream in (arguments[i]);
 					//bool isok = false;
 
@@ -220,17 +214,21 @@ int main(int argc, char *argv[]){
 
 				}
 				for(auto option : options){
-					if(option == "all"){options.erase(options.begin()); isAll = true; continue;}
-
 					if(outmap.count(option) > 0 || isAll){
+						if(!isAll){
 							cout << option << ": " << outmap.at(option) << '\n';
-							
+						}
+						else{
+		
+							cout << outmap.first << '\n';
+						}
 					}
 					else{
 						cerr << "Invalid option provided: " << option << '\n';
 						exit(EXIT_FAILURE);
 					}
 				}
+				cout << "Count: " << cCount << '\n';
 			}
 
 
