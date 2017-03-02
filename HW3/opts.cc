@@ -189,8 +189,11 @@ int main(int argc, char *argv[]){
 					//bool isok = false;
 
 					if(in.is_open()){
-
-						while( getline(in, index) ){
+						char tempc;
+						while( in.get(tempc) ){
+							index.push_back(tempc);
+							}
+							cout << index << "\n";
 							for(size_t j = 0; j < index.size(); j++){
 								string jdex;
 								jdex.push_back(index[j]);
@@ -209,8 +212,7 @@ int main(int argc, char *argv[]){
 								}
 
 							}
-
-						}
+						index = "";
 					}	
 					else {	
 
