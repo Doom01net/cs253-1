@@ -163,7 +163,6 @@ int main(int argc, char *argv[]){
 			//For each char in std in, compare to elements in map corresponding to those char keys, then increment counter
 
 
-			string index;
 			map<string, int> outmap;
 
 			for(auto sym : symArray){
@@ -184,7 +183,7 @@ int main(int argc, char *argv[]){
 				}
 
 				for( size_t i = 0; i < arguments.size(); i++){
-					
+					string index = "";		
 					ifstream in (arguments[i]);
 					//bool isok = false;
 
@@ -212,7 +211,6 @@ int main(int argc, char *argv[]){
 								}
 
 							}
-						index = "";
 					}	
 					else {	
 
@@ -257,7 +255,7 @@ int main(int argc, char *argv[]){
 
 
 
-			//Outputi
+			//Output
 
 		}
 
@@ -278,9 +276,4 @@ int main(int argc, char *argv[]){
 	}
 	return 0;
 }
-//	else{
-//		cout << "no args" << '\n';
-//	}
 
-//	return 0;
-//}
