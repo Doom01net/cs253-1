@@ -22,7 +22,8 @@ void uni2long(string uni){
 		buffer << hex << bits << '\n';
 		buff_str = buffer.str();
 	}
-	cout << buff_str[3] << '\n';
+	for(char i : buff_str)
+	cout << buff_str[i] << '\n';
 }
 
 int main(int argc, char *argv[]){
