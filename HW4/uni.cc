@@ -9,6 +9,7 @@
 #include <string>
 #include <set>
 #include <bitset>
+#include <stringstream>
 
 using namespace std;
 void uni2long(string uni){
