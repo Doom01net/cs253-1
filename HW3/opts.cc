@@ -192,7 +192,7 @@ int main(int argc, char *argv[]){
 						while( in.get(tempc) ){
 							index.push_back(tempc);
 							}
-							cout << index << "\n";
+							//cout << index << "\n";
 							for(size_t j = 0; j < index.size(); j++){
 								string jdex;
 								jdex.push_back(index[j]);

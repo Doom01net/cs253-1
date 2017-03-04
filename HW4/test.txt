@@ -1,0 +1,6 @@
+0000;<control>;Cc;0;BN;;;;;N;NULL;;;;
+0001;<control>;Cc;0;BN;;;;;N;START OF HEADING;;;;
+0002;<control>;Cc;0;BN;;;;;N;START OF TEXT;;;;
+0003;<control>;Cc;0;BN;;;;;N;END OF TEXT;;;;
+0004;<control>;Cc;0;BN;;;;;N;END OF TRANSMISSION;;;;
+0FFFD;<Plane 16 Private Use, Last>;Co;0;L;;;;;N;;;;;
