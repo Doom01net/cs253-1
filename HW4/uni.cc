@@ -19,7 +19,7 @@ void uni2long(string uni){
 	vector<long> byteArray;
 	for(char i : uni){
 		bits = i;
-		buffer << hex << bits << '\n;
+		buffer << hex << bits << '\n';
 		buff_str = buffer.str();
 	}
 	cout << buff_str[3] << '\n';
