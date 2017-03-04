@@ -13,13 +13,11 @@
 using namespace std;
 void uni2long(string uni){
 	long bits;
-	long hex_bits;
+	stringstream buffer;
 	vector<long> byteArray;
 	for(char i : uni){
 	bits = i;
-	cin >> hex_bits;
-	cout << hex << hex_bits << '\n';
-	cout << "hex bits:" << hex_bits << '\n';
+	buffer << hex << bits << '\n';
 	//cout << i << '\n';
 	}
 }
