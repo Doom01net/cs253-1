@@ -15,12 +15,14 @@ using namespace std;
 void uni2long(string uni){
 	long bits;
 	stringstream buffer;
+	string buff_str;
 	vector<long> byteArray;
 	for(char i : uni){
-	bits = i;
-	buffer << hex << bits << '\n';
-	cout << buffer.str() << '\n';
+		bits = i;
+		buffer << hex << bits << '\n;
+		buff_str = buffer.str();
 	}
+	cout << buff_str[3] << '\n';
 }
 
 int main(int argc, char *argv[]){
