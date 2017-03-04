@@ -18,7 +18,7 @@ void uni2long(string uni){
 	for(char i : uni){
 	bits = i;
 	buffer << hex << bits << '\n';
-	//cout << i << '\n';
+	cout << buffer.str() << '\n';
 	}
 }
 
