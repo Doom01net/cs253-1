@@ -1,6 +1,6 @@
 //Habeeb Mohammed
-//2017-01-30
-//CS253 HW2 -- Reading Multiple Files
+//2017-02-25
+//CS253 HW3 -- Options
 
 #include <iostream>
 #include <vector>
