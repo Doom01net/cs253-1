@@ -1,6 +1,6 @@
 //Habeeb Mohammed
-//2017-01-30
-//CS253 HW2 -- Reading Multiple Files
+//2017-03-04
+//CS253 HW4 -- Unicode
 
 #include <iostream>
 #include <vector>
@@ -13,10 +13,13 @@
 using namespace std;
 void uni2long(string uni){
 	long bits;
+	long hex_bits;
 	vector<long> byteArray;
 	for(char i : uni){
 	bits = i;
-	cout << hex << bits << '\n';
+	cin >> hex_bits;
+	cout << hex << hex_bits << '\n';
+	cout << "hex bits:" << hex_bits << '\n';
 	//cout << i << '\n';
 	}
 }
