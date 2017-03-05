@@ -81,7 +81,7 @@ void uni2long(string uni){
 		}
 		else if((byteArray[i] & 0xE0) == 0xE0){
 			cout << "3 bytes!" << '\n';
-			masked1 = (byteArray[i] & 0x07);
+			masked1 = (byteArray[i] & 0x07) << 12;
 			cout << "masked1: " << masked1 << '\n';
 			byte1 = byteArray[i];
 			cout << hex << byte1 << '\n';
@@ -107,9 +107,9 @@ void uni2long(string uni){
 			byte1 = masked1 | masked2 | masked3;
 			cout << "final: " << byte1 << '\n';
 		}
-		else if((byteArray[i] & 0xC0) == 0xC0){
+		else if(((byteArray[i] & 0xC0) == 0xC0) && (byteArray[i] & 0x20) == 0){
 			cout << "2 bytes!" << '\n';
-			masked1 = (byteArray[i] & 0x1F);
+			masked1 = (byteArray[i] & 0x1F) << 6;
 			cout << "masked1: " << masked1 << '\n';
 			byte1 = byteArray[i];
 			cout << hex << byte1 << '\n';
@@ -117,8 +117,8 @@ void uni2long(string uni){
 
 			if((byteArray[i] & 0x80) == 0x80) {
 				cout << "2ND BYTE!" << '\n';
-				cout << "masked2: " << masked2 << '\n';
 				masked2 =(byteArray[i] & 0x3F);
+				cout << "masked2: " << masked2 << '\n';
 				byte2 = byteArray[i];
 				cout << hex << byte2 << '\n';
 			}
