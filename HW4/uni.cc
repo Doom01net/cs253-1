@@ -12,121 +12,139 @@
 #include <sstream>
 
 using namespace std;
-void uni2long(string uni){
-	cout << "uni: " << uni << '\n';
-	//long uni_long = stol(uni.c_str(), nullptr, 16);	
+
+vector<long> uni2long(string uni, string filename, const char* prog_name){
+
+	vector<long> uniArray;	
 	vector<long> byteArray;
+	vector<long> asciiBytes;
 	for(char i : uni){
 		long bits = 0;
-		//cout << "long size: " << sizeof(bits) << '\n';
 		int cleared = 0;
 		bits = i;
+		if(bits >= 0 && bits < 128){
+			uniArray.push_back(bits);
+		}
 		cleared = bits & 0x000000ff;
 		byteArray.push_back(cleared);
-		//cout << "cleared: " << sizeof(cleared)  << '\n';
-		//cout << hex << cleared << '\n';
 	}
-	//cout << byteArray.size() << '\n';
-	
-	//long rand = 0x10000;
-	//cout << rand << '\n';
 	long masked1, masked2, masked3, masked4;
-	long byte1, byte2, byte3, byte4;
+	long byte;
 	for(size_t i = 0; i < byteArray.size(); i++){
-		//cout << "byte: " << (byte) << '\n';
-		//cout << "masked: " << masked <<'\n';
+	
 		if((byteArray[i] & 0x80) == 0){
-			cout << "ASCII" << '\n';
-			cout << byteArray[i] << '\n';
+		
 		}
+	 
 		else if(((byteArray[i] & 0xF0) == 0xF0) && (byteArray[i] & 0x08) == 0){
-			cout  << "4 bytes!" << '\n';
 			masked1 = (byteArray[i] & 0x07);
-			cout << "masked1: " << masked1 << '\n';
-			byte1 = byteArray[i];
-			cout << hex << byte1 << '\n';
+			byte = byteArray[i];
 			i++;
 
 			if((byteArray[i] & 0x80) == 0x80) {
-				cout << "2ND BYTE!" << '\n';
 				masked2 = (byteArray[i] & 0x3F) << 12; 
-				cout << "masked2: " << masked2 << '\n';
-				byte2 = byteArray[i];
-				cout << hex << byte2 << '\n';
+				byte = byteArray[i];
 				i++;
 
 				if((byteArray[i] & 0x80) == 0x80) {
-					cout << "3RD BYTE!" << '\n';
 					masked3 = (byteArray[i] & 0x3F) << 6;
-					cout << "masked3: " << masked3 << '\n';
-					byte3 = byteArray[i];
-					cout << hex << byte3 << '\n';
+					byte = byteArray[i];
 					i++;
 
 					if((byteArray[i] & 0x80) == 0x80) {
-						cout << "4TH BYTE!" << '\n';
 						masked4 = (byteArray[i] & 0x3F);
-						cout << "masked4: " << masked4 << '\n';
-						byte4 = byteArray[i];	
-						cout << hex << byte4 << '\n';
+						byte = byteArray[i];	
+					}
+					else{
+		
+						cout << "Invalid character given!" << '\n';
+						cout << "Improperly encoded byte: " << hex << byteArray[i-1] << '\n';
+						cout << "Offending file: " << filename << '\n';
+						cout << "Program name: " << prog_name << '\n';
+						exit(EXIT_FAILURE);					
 					}
 
 				
 				}
+				else{
+
+					cout << "Invalid character given!" << '\n';
+					cout << "Improperly encoded byte: " << hex << byteArray[i-1] << '\n';
+					cout << "Offending file: " << filename << '\n';
+					cout << "Program name: " << prog_name << '\n';
+					exit(EXIT_FAILURE);
+				}
 				
 			}
-				
-			byte1 = masked1 | masked2 | masked3 | masked4;
-			cout << "final: " << byte1 << '\n';	
+			else{
+
+				cout << "Invalid character given!" << '\n';
+				cout << "Improperly encoded byte: " << hex << byteArray[i-1] << '\n';
+				cout << "Offending file: " << filename << '\n';
+				cout << "Program name: " << prog_name << '\n';
+				exit(EXIT_FAILURE);
+
+			}	
+			byte = masked1 | masked2 | masked3 | masked4;
+			uniArray.push_back(byte);
 		}
 		else if((byteArray[i] & 0xE0) == 0xE0){
-			cout << "3 bytes!" << '\n';
 			masked1 = (byteArray[i] & 0x07) << 12;
-			cout << "masked1: " << masked1 << '\n';
-			byte1 = byteArray[i];
-			cout << hex << byte1 << '\n';
+			byte = byteArray[i];
 			i++;
 
 			if((byteArray[i] & 0x80) == 0x80) {
-				cout << "2ND BYTE!" << '\n';
 				masked2 = (byteArray[i] & 0x3F) << 6;
-				cout << "masked2: " << masked2 << '\n';
-				byte2 = byteArray[i];
-				cout << hex << byte2 << '\n';
+				byte = byteArray[i];
 				i++;
 
 				if((byteArray[i] & 0x80) == 0x80) {
-					cout << "3RD BYTE!" << '\n';
 					masked3 = (byteArray[i] & 0x3F);
-					cout << "masked3: " << masked3 << '\n';
-					byte3 = byteArray[i];
-					cout << hex << byte3 << '\n';
+					byte = byteArray[i];
+				}
+				else{
+				
+					cout << "Invalid character given!" << '\n';
+					cout << "Improperly encoded byte: " << hex << byteArray[i-1] << '\n';
+					cout << "Offending file: " << filename << '\n';
+					cout << "Program name: " << prog_name << '\n';
+					exit(EXIT_FAILURE);
 				}
 			}
+			else{
+				cout << "Invalid character given!" << '\n';
+				cout << "Improperly encoded byte: " << hex << byteArray[i-1] << '\n';
+				cout << "Offending file: " << filename << '\n';
+				cout << "Program name: " << prog_name << '\n';
+				exit(EXIT_FAILURE);
+			}
 
-			byte1 = masked1 | masked2 | masked3;
-			cout << "final: " << byte1 << '\n';
+			byte = masked1 | masked2 | masked3;
+			uniArray.push_back(byte);
 		}
 		else if(((byteArray[i] & 0xC0) == 0xC0) && (byteArray[i] & 0x20) == 0){
-			cout << "2 bytes!" << '\n';
 			masked1 = (byteArray[i] & 0x1F) << 6;
-			cout << "masked1: " << masked1 << '\n';
-			byte1 = byteArray[i];
-			cout << hex << byte1 << '\n';
+			byte = byteArray[i];
 			i++;
 
 			if((byteArray[i] & 0x80) == 0x80) {
-				cout << "2ND BYTE!" << '\n';
 				masked2 =(byteArray[i] & 0x3F);
-				cout << "masked2: " << masked2 << '\n';
-				byte2 = byteArray[i];
-				cout << hex << byte2 << '\n';
+				byte = byteArray[i];
+			}
+			else{
+				cout << "Invalid character given!" << '\n';
+				cout << "Improperly encoded byte: " << hex << byteArray[i-1] << '\n';
+				cout << "Offending file: " << filename << '\n';
+				cout << "Program name: " << prog_name << '\n';
+				exit(EXIT_FAILURE);
 			}
 			
-			byte1 = masked1 | masked2;
-			cout << "final: " << byte1 << '\n';	
-		}	
+			byte = masked1 | masked2;
+			uniArray.push_back(byte);
+		}
+			
 	}
+	return uniArray;
 }
 
 int main(int argc, char *argv[]){
@@ -279,26 +297,26 @@ int main(int argc, char *argv[]){
 
 			//Stores ascii chars corresponding to decimal values (i.e. 37 --> %) into a char vector
 
-			vector<string> asciiArray;
+			//vector<string> asciiArray;
 
-			for( size_t i = 0; i < hexArray.size(); i++){
+			/*for( size_t i = 0; i < hexArray.size(); i++){
 				char tempc = (char) hexArray[i];
 				string temps;
 				temps.push_back(tempc);
 				asciiArray.push_back( temps );
-			}
+			}*/
 
 
 			input.close();
 
 			//Make and populate a map with ascii and property symbol(s) (i.e. Cc to C for now, perhaps tuple in the future?)
 
-			map<string, string> propmap;		
+			map<long, string> propmap;		
 
 			for( size_t i = 0; i < symArray.size(); i++ ){
 
 				string symbol = symArray[i];
-				propmap.insert( pair<string,string>(asciiArray[i], symbol) );
+				propmap.insert( pair<long,string>(hexArray[i], symbol) );
 			}
 
 
@@ -327,20 +345,27 @@ int main(int argc, char *argv[]){
 				for( size_t i = 0; i < arguments.size(); i++){
 					string index = "";		
 					ifstream in (arguments[i]);
-					//bool isok = false;
 
 					if(in.is_open()){
 						char tempc;
 						while( in.get(tempc) ){
 							index.push_back(tempc);
 							}
-							uni2long(index);
-							cout << index << "\n";
-							for(size_t j = 0; j < index.size(); j++){
+							vector<long> finalArray = uni2long(index, arguments[i], argv[0]);
+							for(long element : finalArray){
+								
+								if(propmap.count(element) > 0){
+									for(size_t k = 0; k < options.size(); k++){
+										if(options.at(k) == propmap.at(element)){
+											outmap.at(options.at(k))++;
+										}
+									}
+								}
+							}
+							/*for(size_t j = 0; j < index.size(); j++){
 								string jdex;
 								jdex.push_back(index[j]);
 								//cout << jdex << '\n';
-							//	uni2long(jdex);
 								if( propmap.count(jdex) > 0 ){
 									
 									for(size_t k = 0; k < options.size(); k++){
@@ -354,7 +379,7 @@ int main(int argc, char *argv[]){
 									}
 								}
 
-							}
+							}*/
 					}	
 					else {	
 
@@ -378,13 +403,13 @@ int main(int argc, char *argv[]){
 							if(isAll){
 							
 								if(iter != outmap.cend()){
-								//cout << iter->first << ": " << iter->second << '\n';
+								cout << iter->first << ": " << iter->second << '\n';
 								++iter;
 								}
 	
 							}
 							else{
-								//cout << option << ": " << outmap.at(option) << '\n';
+								cout << option << ": " << outmap.at(option) << '\n';
 
 							}
 
