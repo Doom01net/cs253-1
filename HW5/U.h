@@ -20,15 +20,19 @@ class U {
                 int propcount(std::string property) const;    //Returns frequency of property in accumulated string
                 std::set<std::string> props();          //Returns a set of all possible properties read from propfile
         private:
-		int charCount;
+		bool prop;
+	//	int charCount;
 		int sizeVal;
                 std::string acc;
+		std::vector<std::string> acc_vector;	
+		std::vector<char> acc_chars;
                 std::vector<std::string> properties;
 		std::vector<std::string> symArray;
 		std::vector<long> hexArray;
+		std::map<long, std::string> outmap;
 		std::map<long, std::string> propmap;
 		//helper methods
 		std::vector<long> uni2long(std::string uni);
-
+		std::vector<char> long2uni(std::vector<long> vl);
 };
 

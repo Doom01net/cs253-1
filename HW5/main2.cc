@@ -7,7 +7,7 @@ int main() {
 
                 //Initial Test Case from Jack
 
-	    /*string inputfile = "input";
+	    string inputfile = "input";
             U foo(pub+"UnicodeData.txt", inputfile);
             cout << "Should be 8: " << foo.size() << '\n'
                  << "Should be 2: " << foo.propcount("Sm") << '\n'
@@ -22,13 +22,13 @@ int main() {
             cout << "Should be 16: " << foo.size() << '\n'
                  << "Should be 4: " << foo.propcount("Sm") << '\n'
                  << "Should be b³: " << foo.get(3,5) << '\n';
-             */
+             
 
 
             //Test reading file before multiple propfile calls 
 
 
-            	string inputFileName = "input.txt";
+            /*	string inputFileName = "input.txt";
                 U foo;
                 foo.readfile(inputFileName);
                 foo.propfile(pub+"UnicodeData.txt");
@@ -37,7 +37,7 @@ int main() {
                 cout << "Should be 8: " << foo.size() << '\n'
                  << "Should be 2: " << foo.propcount("Sm") << '\n'
                  << "Should be b³: " << foo.get(3,5) << '\n';
-            
+            */
 
 
             /*Initial Test Case from Jack but with bad property file

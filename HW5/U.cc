@@ -11,17 +11,20 @@
 #include <map>
 #include <set>
 #include "U.h"
+#include <bitset>
 
 using namespace std;
 
 U::U(){
 	acc = "";
 	sizeVal = 0;
-	charCount = 0;
+	//charCount = 0;
+	prop = false;
 }
 
 U::U(const U &rhs){
 	acc = rhs.acc;
+	prop = rhs.prop;
 	properties = rhs.properties;
 	sizeVal = rhs.sizeVal;
 	symArray = rhs.symArray;
@@ -30,6 +33,9 @@ U::U(const U &rhs){
 }
 
 U::U(string properties, string data){
+	acc = "";
+	sizeVal = 0;
+	prop = true;
 	propfile(properties);
 	readfile(data);
 	
@@ -42,6 +48,7 @@ vector<long> U::uni2long(string uni){
 	vector<long> uniArray;	
 	vector<long> byteArray;
 	vector<long> asciiBytes;
+	string whole = "";
 	for(char i : uni){
 		long bits = 0;
 		int cleared = 0;
@@ -145,7 +152,57 @@ vector<long> U::uni2long(string uni){
 		}
 			
 	}
+	
 	return uniArray;
+}
+
+vector<char> U::long2uni(vector<long> vl){
+	int low = 0;
+	int lower = 0;
+	int lowerer = 0;
+	int hi = 0;
+	int decoded = 0;
+	char tempchar;
+	vector<char> char_vec;
+	for(size_t i = 0; i < vl.size(); i++){
+		if((vl.at(i) > 0) && (vl.at(i) < 127)){
+			tempchar = vl.at(i);
+			char_vec.push_back(tempchar);
+			continue;
+		}
+
+		if((vl.at(i) > 128) && (vl.at(i) < 2047)){
+			low = (vl.at(i) & 0x003F);
+			hi = (vl.at(i) & 0x07C0) << 2;
+			decoded = (low | hi) + 0xC080;	
+			tempchar = decoded;
+			char_vec.push_back(tempchar);
+			continue;
+		}
+
+		if((vl.at(i) > 2048) && (vl.at(i) < 65535)){
+			lower = (vl.at(i) & 0x003F);
+			low = (vl.at(i) & 0x0FC0) << 2;
+			hi = (vl.at(i) & 0xF000) << 4;
+			decoded = (hi | low | lower) + 0xE0A0A0;
+			tempchar = decoded;
+			char_vec.push_back(tempchar);
+			continue; 
+		}
+		
+		if((vl.at(i) > 65536) && (vl.at(i) < 1114111)){
+			lowerer = (vl.at(i) & 0x003F);
+			lower = (vl.at(i) & 0x0FC0) << 2;
+			low = (vl.at(i) & 0x03F0) << 4;
+			hi = (vl.at(i) & 0x7000) << 6;
+			decoded = (hi | low | lower | lowerer) + 0xF0A0A0A0;
+			tempchar = decoded;
+			char_vec.push_back(tempchar);
+			continue;
+		}
+
+	}
+	return char_vec;	
 }
 
 void U::readfile(const string filename){
@@ -157,33 +214,48 @@ void U::readfile(const string filename){
 		while(input.get(tempc)){
 			temps.push_back(tempc);
 		}
+		if((prop == false) || (acc == "")){
 		acc += temps;
-		cout << "accumulated string size: " << acc.size() << '\n';
-		vector<long> finalArray = uni2long(acc);
-		charCount += finalArray.size();
+		}
+		if((prop == true) && (acc != "")){
+		//cout << "accumulated string size: " << acc.size() << '\n';
+		vector<long> finalArray = uni2long(temps);
+		acc_chars = long2uni(finalArray);
+		//charCount += finalArray.size();
 		for(long element : finalArray){
-			cout << "Element: " << element << '\n';
+			//cout << "Element: " << element << '\n';
 			if(propmap.count(element) > 0){
 				properties.push_back(propmap.at(element));
+				acc_vector.push_back(outmap.at(element));
+				//acc += propmap.at(element);
+				//outmap.at(propmap.at(element))++;
 			}
 		}
 	input.close();	
 	}
-	else if(!(input.is_open() && (filename != ""))){
-		acc += filename;
-		cout << "accumulated string size2: " << acc.size() << '\n';
+	}
+	else if(!(input.is_open()) && (filename != "")){
+		if((prop == false) || (acc == "")){
+			acc += filename;
+		}
+		//cout << "accumulated string size2: " << acc.size() << '\n';
+		if((prop == true) && (acc != "")){
 		vector<long> finalArray = uni2long(acc);
-		charCount += finalArray.size();
+		acc_chars = long2uni(finalArray);
+		//charCount += finalArray.size();
 		for(long element : finalArray){
-			cout << "Element2: " << element << '\n';
 			if(propmap.count(element) > 0){
 				properties.push_back(propmap.at(element));
+				acc_vector.push_back(outmap.at(element));
+				//acc += propmap.at(element);
+				//outmap.at(propmap.at(element))++;
 			}
 		}
 	input.close();
 	}
-
-	cout << "Accumulated string: " << acc << '\n';
+	}
+	
+	//cout << "Accumulated string: " << acc << '\n';
 }
 
 void U::propfile(const string properties){
@@ -194,6 +266,7 @@ void U::propfile(const string properties){
          	//Store each line of properties file into vector
 
                 vector<string> strArray;
+		vector<string> unicodes;
                 string line;
 
                         while( getline(input, line) ){
@@ -211,6 +284,7 @@ void U::propfile(const string properties){
                                 long hexVal;
                                 size_t position1 = s.find(delim);
                                 hexVal = stol(s.substr(0,position1).c_str(), nullptr, 16);
+				unicodes.push_back(s.substr(0,position1));
                                 hexArray.push_back(hexVal);
 
                                 //store character properties into a vector
@@ -227,15 +301,23 @@ void U::propfile(const string properties){
                         for( size_t i = 0; i < symArray.size(); i++ ){
 
                                 string symbol = symArray[i];
+				string uni = unicodes[i];
                                 propmap.insert( pair<long,string>(hexArray[i], symbol) );
+				outmap.insert( pair<long,string>(hexArray[i], uni) );
                         }
-
-	input.close();
+	
+	
+		input.close();
+		if(prop == false){
+			prop = true;
+			readfile(acc);
+		}
 	}
 	else throw string("Invalid properties file given to propfile()!");
 }
 
 int U::size() const {
+	
 	return properties.size();
 }
 
@@ -244,8 +326,9 @@ string U::get() const {
 }
 
 string U::get(int index) const {
-	string result = "" + acc.at(index);
-	return result;
+	string tempstr = "";
+	tempstr.push_back(acc_chars.at(index));
+	return tempstr;
 }
 
 string U::get(int start, int limit) const {
