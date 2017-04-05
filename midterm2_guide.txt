@@ -1,0 +1,247 @@
+------Inheritance------
+	Is-a (Fork is a Silverware)
+	Has-a (Fork has a filigree design)
+
+	Inheritance access:
+		-public, private, protected <-- for inherited classes
+	
+	Calling base class methods:
+		-use Base::foo() or typedef Base to super then:
+			typedef Base super;
+			super::foo();
+	
+	Slicing:
+		-If an inherited class has more meat than the base class, 
+		and is passed to the base class, then the extra meat is sliced off.
+	
+	Virtual Functions:
+		-Referring to a virtual function that is polymorphed will 
+		return the Base class version, unless it is virtual.
+		-If a method is declared virtual it is virtual all the way down (turtles)
+	Polymorphism:
+		-class Snake is a Animal, Dog is a Animal, and Cat is a Animal,
+		Snake, Cat and Dog are all Animals, but Animal is NOT a Snake, 
+		Dog or Cat
+	Pure Virtual:
+		- A class with a pure virtual function behaves like an interface in Java.
+	Dynamic Casting:
+		- Used to cast a pointer to a base class object to a pointer
+		 to a derived class.
+		- Dinner party example:
+			 void dinner_guest(Relative *r) {
+ 		   	 // Mom’s a vegetarian.  Is this her?
+   		 	 Mother *m = dynamic_cast<Mother *>(r);
+   		 	 // m is non-nullptr for Mom, nullptr for everybody else.
+    	 	 	 if (m)
+				 cout << "Veggie lasagna for " << r->get_name() << "!\n";
+		    	 else
+				 cout << "Dead animal flesh for " << r->get_name() << "!\n";
+			 }	
+	Multiple Inheritance:
+		-Possible in C++:
+			class Jack : public Citizen, public Teacher {}
+		-Friendship is not inherited
+	Virtual Inheritance & The Dreaded Diamond:
+		          Worker
+			 /      \        
+		CSU_Employee	FCC_Employee
+			 \      /
+			   Jack
+		-If Worker has a social security # variable,
+		 then both CSU_Employee and FCC_Employee
+		have that variable, and then since Jack inherits from both
+		 CSU_Employee AND FCC_Employee, he will have TWO social security #s. 
+		This is baaad.
+		-Solved by using virtual inheritance:
+			class CSU_Employee : public virtual Worker {...};
+			class FCC_Employee : public virtual Worker {...};
+			class Jack : public CSU_Employee, public FCC_Employee {...};
+	
+------Other Goodies-----
+	stringstreams:
+		-An object that can hold "printed" string as a string
+		-ostringstream to store output values
+		-istringstream to store input values
+
+	Increment/Decrement Methods:
+		-Whatever &operator++() //Preincrement
+		-Whatever operator++(int) //Postincrement (can't be referenced and has arg)
+		-Example methods:
+				Whatever &operator++(){
+					*this += 1;
+					return *this;
+				}
+				
+				Whatever operator++(int){
+					const auto save = *this;
+					++*this;
+					return save
+				}
+
+	Rule of three (ctor/dtor/assignment operator):
+                     Loud a;    // Call the default ctor
+                     Loud b(a); // Call the copy ctor
+                     Loud c=a;  // Call the copy ctor.  Yes, REALLY. 
+                     c=a;       // Call the assignment operator.
+                     Loud d(42);// Call the ctor
+                     Loud e();  // What does this do?
+                     d = ++a;   // operator++ and operator=
+
+	Delegating ctors:
+		Ratio() : Ratio(1,1) {} NOT Ratio() { Ratio(1,1);}
+	Include Guards:
+		-In the .h file:
+				#ifndef FILENAME_H
+				#define FILENAME_H
+				...
+				#endif
+	Separate Compilation:
+		-Using .h and .cc files separately instead of in the same class.
+		-Used as a "contract" between developer and user.
+		 Shows the functionality without showing too much.
+	Namespace Pollution:
+		-DO NOT using namespace std; IN THE HEADER FILE
+	Bit Manipulation:
+		-bitwise and (&), or (|), exclusive-or (^)
+   		-shift left (<<), shift right (>>)
+    		-assignment operator versions (&=, |=, ^=, <<=, >>=)
+    		-octal constant (0377)
+    		-hexadecimal constant (0x3FF)
+    		-binary constant (C++14) (0b1010110111) 
+	Programming paradigms:
+		-Imperative: Object Oriented Programming Languages (C/C++/Java/C#)
+		-Declarative: Database Query Languages (SQL/HTML/Makefiles)
+		-Functional: Mathematical Programming Languages (Wolfram/Lisp/Haskell)
+		-Event-driven: GUI/Application dominant paradigm (JavaScript/P)
+	Exception handling:
+		-Try/catch:
+			try{
+				foo();
+			}
+			catch(const char* error){
+				cout << error << '\n';
+			}
+		-Throw:
+			void foo(){
+				throw "ouch!";	
+			}
+		-DON'T USE: exit, abort, assert, signal, divide
+
+	<stdexcept> Header:
+		-Defines a set of standard exceptions to report common errors:
+			-Logic errors: logic_error, domain_error,
+			 invalid_argument, length_error
+			 out_of_range
+			-Runtime errors: runtime_error, range_error, 
+			 overflow_error, underflow_error	
+	unique_ptr:
+		-A unique pointer "owns" the pointed to object. When the 
+		unique_ptr is destroyed, the pointed-to object is destroyed as well.
+		-Cannot assign a unique pointer.
+	shared_ptr:
+		-A "counting pointer" that keeps track of how many shared owners
+		 the object has via a counter.
+		-A new owner increments the counter and the counter decrements 
+		 if any owner is destroyed.
+		-If counter = 0, the object is destroyed.
+		-Assignment increments the use count.
+
+------I/O------
+	I/O Hierarchy:
+		           ┌─────┐
+			   │ ios │
+			   └─────┘
+			      △
+			      │
+	     ┌────────────────┴────────────────┐
+	     │                                 │
+	┌────┴────┐                       ┌────┴────┐
+	│ istream │                       │ ostream │
+	└─────────┘                       └─────────┘
+	     △                                 △
+	     │                                 │
+      ┌──────┴───────┐                  ┌──────┴───────┐
+      │              │                  │              │
+┌─────┴────┐ ┌───────┴───────┐  ┌───────┴───────┐ ┌────┴─────┐
+│ ifstream │ │ istringstream │  │ ostringstream │ │ ofstream │
+└──────────┘ └───────────────┘  └───────────────┘ └──────────┘
+
+	I/O Header Files:
+	
+		
+		<iostream>	
+
+			istream cin;	
+			ostream cout;	
+			ostream cerr;	
+			ostream clog;
+		<istream>	
+
+			class istream;	
+			class iostream; 
+
+
+		<ostream>	
+
+			class ostream;
+		<sstream>	
+
+			class istringstream;	
+			class ostringstream;	
+			class stringstream; 
+
+		<fstream>	
+
+			class ifstream;	
+			class ofstream;	
+			class fstream;
+		<ios>	
+
+			These don’t take an argument	
+
+			[no]boolalpha	
+			[no]showbase	
+			[no]showpoint	
+			[no]showpos	
+			[no]skipws	
+			[no]uppercase	
+			left / right / internal	
+			dec / hex / oct	
+			fixed / scientific
+		<iomanip>	
+
+			These do take an argument	
+
+			resetiosflags	
+			setiosflags	
+			setbase	
+			setfill	
+			setprecision	
+			setw (non-sticky)
+
+		ios state flags:
+			eofbit() : will be true if end of file
+			failbit() : will be true if higher level I/O fails
+			badbit() : will be true if low level (hardware)
+				   I/O fails (out of memory etc)
+
+		ostream::put(char c):
+			-inserts the passed char into the stream.
+		ostream::write(const char* s, streamsize n):
+			-inserts the first n characters of the passed c_string into the stream
+		ostream::seekp():
+			-Sets the position where the next character is to be inserted into the ostream.
+		istream::get():
+			-Extracts characters from the stream as unformatted input.
+		istream::unget():
+			-Replaces and retracts from a character that was already extracted by get().
+		istream::peek():
+			-Returns the next character without extracting it.
+		istream::getline():
+			-Extracts characters until the newline and stores them into a c_string
+		istream::ignore():
+			-Extracts characters from the input sequence and discards them
+		
+	Implicit Inclusion:
+		-Always include the header files you need, even if one #include 
+		includes all that you need!
