@@ -56,10 +56,6 @@ int U::iterator::operator*(){
 	return *this->current;
 }
 
-
-
-
-
 //--------------------------------------------------------
 U::iterator U::end(){
 	U::iterator iter;
