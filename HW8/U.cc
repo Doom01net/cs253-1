@@ -57,9 +57,6 @@ int U::iterator::operator*(){
 }
 
 
-
-
-
 //--------------------------------------------------------
 U::iterator U::end(){
 	U::iterator iter;

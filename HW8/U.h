@@ -9,6 +9,7 @@ class U{
 		class iterator{
 			public:
 				iterator();
+				iterator &operator=(const iterator &rhs) = default;
 				iterator(const iterator &rhs);
 				~iterator();
 				friend bool operator==(const iterator &lhs, const iterator &rhs);
