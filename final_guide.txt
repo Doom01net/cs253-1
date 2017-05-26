@@ -1,0 +1,171 @@
+------Templates------
+
+	Things that can be templated:
+		-Functions
+		-Classes
+		-Variables (C++14)
+		-'using' aliases
+
+	Possible template parameters:
+		-Typename T
+		-Class C
+		-int N
+		-bool B
+		-template T (don't worry about this)
+
+	Impossible template parameters:
+		-Floating point numbers
+		-Strings
+		-Objects
+
+	Examples:
+		template <typename T>			//Templatized class
+		class JustThis {
+			T this;
+			public:
+			T get_this() cost { return this; }
+		};
+		
+		template <typename T>			//Templatized function
+		void print(T toPrint){
+			cout << toPrint << '\n';
+		}
+	
+		template <typename Tx, Ty>		//May have multiple template params
+		class TwoThings{
+			...
+		};
+
+------Iterators------
+
+	Characteristics of iterators:
+		- * to dereference
+		- ++ to increment
+		- .begin() returns an iterator pointing to the first element
+		- .end() returns an iterator point to one index past the last element
+		- .front() returns a reference to the first element
+		- .back() returns a reference to the last element
+		- iterators are NOT pointers
+		- const objects return const_iterators not iterators
+
+	Iterator Classifications:
+		- BidirectionalIterator(list, set, unordered_set):
+			    ++, --, ==, !=, *, ->, = 
+		- RandomAccessIterator(std::array, vector, string):
+			    ++, --, +=int, -=int, +int, -int, iter-iter, ==, !=, <, <=, >, >=, *, ->, = 
+		- ForwardIterator(forward_list):
+			    ++, ==, !=, *, ->, = 
+	.begin()/.end():
+		- .begin() returns an iterator that points to the first element
+		- .end() returns an iterator that points one past the last element
+		- together form a half-open interval
+		- .cbegin()/.cend() always return a const_iterator
+		- .rbegin()/.rend() go in reverse
+		
+	Examples:
+		for (auto it = l.begin(); it != l.end(); ++it)		//for loop
+		 
+------STL Containers-----
+	
+Name	  		Key/Value	Insertion	Append	Search	  Ordered
+string	   		value		O(n)		O(1)	O(n)	  no
+vector	   		value		O(n)		O(1)	O(n)	  no
+list	   		value		O(n)		O(1)	O(n)	  no
+[multi]set		value		O(log n)	x 	O(log n)  yes
+[multi]map		key/value	O(log n)	x 	O(log n)  yes
+deque	  		value		O(n)		O(1)	O(n)	  no
+unordered_[multi]set	value	        O(1)		x	O(1)	  no
+unordered_[multi]map	key/value	O(1)		x	O(1)	  no
+
+  Popular containers:
+    vector: variable-length array
+    string: vector<char>
+    list: doubly-linked list
+    set: an ordered tree
+    multiset: a set where duplicates are permitted
+    map: a tree of key,value (or a translation)
+    multimap: a map where duplicate keys are permitted
+    deque: a vector with push/pop at either end
+    unordered_set: hash version of set
+    unordered_multiset: hash version of multiset
+    unordered_map: hash version of map
+    unordered_multimap: hash version of multimap 
+
+    Universal container methods:
+        default ctor
+        copy ctor
+        operator=
+        ctor(iter, iter)
+        ctor(n)
+        empty()
+        size() / max_size()
+        clear()
+        begin() / end() / cbegin() / cend() 
+    Popular container methods:
+        rbegin() / rend() / crbegin() / crend()
+        front() / back()
+        insert() / erase()
+        find() / count() 
+
+    Universal types:
+        value_type
+        iterator
+        const_iterator
+        size_type 
+    Popular types:
+        key_type
+        reverse_iterator
+        const_reverse_iterator 
+
+------regex--------
+
+What  	    Description 	 What 	   Description
+. 	    any one char but \n  | 	   alternation
+[a-fxy0-9]  any one of these 	 (…) 	   grouping
+[^a-fxy0-9] not one of these 	 \b 	   word boundary
+* 	    0–∞ of previous 	 \d or \D  [0-9] or not
++ 	    1–∞ of previous 	 \s or \S  [ \n\r…] or not
+? 	    0–1 of previous 	 \w or \W  [0-9a-zA-Z] or not
+{17} 	    17 of previous 	 ^ 	   beginning of line
+{3,8} 	    3–8 of previous 	 $ 	   end of line 
+
+Examples:
+	phone number regex (no area code): '[0-9]{3}-[0-9]{4}' or '[\d]{3}-[\d]{4}'
+	email regex: '[\w._-]+@[\w]+\.[a-z]{2,4}'
+						
+------Algorithms-------
+#include <algorithms>
+
+	-find(InputIterator first, InputIterator last, const T& val): returns an iterator to the first element in [first, last) that compares equal to val if val is found, otherwise returns last.
+	-find_if: Same as find, but compares equivalence to a predicate(boolean condition) instead of a value.
+	-copy(InputIterator first, InputIterator last, OutputIterator result): copies the elements in range [first, last) into range beginning at result.
+	-copy_if: same as copy, but only copies values that meet a predicate condition
+	-sort: sorts elements in a [first, last) range from least to greatest unless given a predicate
+
+------Functors--------
+
+	Overloading of the operator() to allow computation.
+	Standard functors:
+		- plus: [](int a, int b){return a+b;}
+		- minus
+		- multiplies
+		- divides
+		- negate: [](int a){return -a;}
+		- less, greater, less_equal, equal_to, not_equal_to, etc.
+		- logical_and: [](int a, int b){return a&&b;}
+		- logical_or, logical_not
+
+------Lambda Expressions----
+	
+	auto p = [](double d) -> double {return d/2.0;};
+	or
+	auto p = [](double d){return d/2.0;};
+
+------Other Stuff------
+	-using .reserve() preallocates memory for objects with iterators, so that reallocation does not effect it
+	-elision is when the compiler fools the programmer into thinking it is doing more than it is
+	-Duck Typing: no enforcement for STL containers. If it looks like a container, has elements of a container, its probably a STL container.
+
+	-Initializer lists: {1, 2, 3} is an object of type initializer_list<int> (has an iterator)
+	-Raw Strings: cout << R"X(A goatee!  :-)"  Cool!)X"; prints A goatee!  :-)"  Cool!	
+		
