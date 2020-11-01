@@ -20,6 +20,7 @@ istream &operator>>(istream &is, Number &rhs) {
     string strang;
     is >> n;
 	if(is.fail()){
+		is.clear() // to get rid of the fail bit, i.e. set it to good. 
 		is >> strang;
 	        rhs = strang;
 		return is;
